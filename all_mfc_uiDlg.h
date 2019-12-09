@@ -117,4 +117,8 @@ public://用于让窗口和背景相适应
 	int m_oldWidth;   //窗口的宽
 	int m_oldHeight;  //窗口的高
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+
+	CString m_current_name;
+	CString m_OutputString;
+	afx_msg void OnEnChangeOutputstring();
 };

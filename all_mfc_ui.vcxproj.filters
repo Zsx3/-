@@ -36,9 +36,6 @@
     <ClInclude Include="CvvImage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CLoginDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="InfoFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="transparent_for_light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CLoginDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -65,6 +65,8 @@
 #define IDC_STATIC_3                    1037
 #define IDC_STATIC_4                    1038
 #define IDC_STATIC_5                    1039
+#define IDC_name                        1040
+#define IDC_OutputString                1041
 
 // Next default values for new objects
 // 
@@ -72,7 +74,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        164
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1040
+#define _APS_NEXT_CONTROL_VALUE         1042
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

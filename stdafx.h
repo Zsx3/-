@@ -33,7 +33,7 @@
 
 #include <afxcontrolbars.h>     // 功能区和控件条的 MFC 支持
 #include <afxcontrolbars.h>
-
+extern CString  current_user_name;
 
 
 

@@ -2,7 +2,6 @@
 
 
 // CLoginDlg 对话框
-
 class CLoginDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CLoginDlg)

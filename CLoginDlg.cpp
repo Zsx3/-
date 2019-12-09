@@ -11,6 +11,7 @@
 
 IMPLEMENT_DYNAMIC(CLoginDlg, CDialogEx)
 
+
 CLoginDlg::CLoginDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(DIALOG_LOGIN, pParent)
 	, m_user(_T(""))
@@ -94,6 +95,8 @@ void CLoginDlg::OnBnClickedLoginBtn()
 			file.WriteDocline1(m_user, 0);
 			file.WriteDocline1(m_user, 1);
 			file.WriteDocline1(login_ifm.m_time_login, 2);
+
+			current_user_name = m_user;//记录当前登入人员的id
 			return;
 		}
 	}

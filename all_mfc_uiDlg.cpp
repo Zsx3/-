@@ -87,7 +87,9 @@ END_MESSAGE_MAP()
 
 CallmfcuiDlg::CallmfcuiDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_ALL_MFC_UI_DIALOG, pParent)
-	, m_ServicePort(0)
+	, m_ServicePort(8260)
+	, m_current_name(_T(""))
+	, m_OutputString(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -109,6 +111,8 @@ void CallmfcuiDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_L2, m_L2);
 	DDX_Control(pDX, IDC_STATIC_L3, m_L3);
 	DDX_Control(pDX, IDC_STATIC_L4, m_L4);
+	DDX_Text(pDX, IDC_name, m_current_name);
+	DDX_Text(pDX, IDC_OutputString, m_OutputString);
 }
 
 BEGIN_MESSAGE_MAP(CallmfcuiDlg, CDialogEx)
@@ -132,6 +136,7 @@ BEGIN_MESSAGE_MAP(CallmfcuiDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BTN_PRINT, &CallmfcuiDlg::OnBnClickedBtnPrint)
 	ON_WM_CTLCOLOR()
 	ON_WM_SIZE()
+	ON_EN_CHANGE(IDC_OutputString, &CallmfcuiDlg::OnEnChangeOutputstring)
 END_MESSAGE_MAP()
 
 
@@ -217,6 +222,11 @@ BOOL CallmfcuiDlg::OnInitDialog()
 	GetClientRect(&rect);
 	m_oldWidth = rect.Width();    //将初始的宽和高保存起来，当窗口大小改变的时候用得上
 	m_oldHeight = rect.Height();
+
+	//===显示操作人员名称及编号
+	m_OutputString = _T("编号");
+	m_current_name = current_user_name;
+	UpdateData(false);
 
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -573,6 +583,8 @@ void CallmfcuiDlg::OnBnClickedpaintrectbtn()
 //=======================================================取点模式==============================
 void on_mouse_point(int event, int x, int y, int flags, void* ustc)
 {
+	
+
 
 	if (paint_point_btn_flag == TRUE)
 	{
@@ -630,6 +642,8 @@ DWORD WINAPI Paint_Point_Thread(LPVOID lpParam)
 void CallmfcuiDlg::OnBnClickedpaintpointbtn()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	AfxMessageBox(_T("使用取点模式并按下确定键后会将您的信息记录在后台"));
+
 	frame = clear_pic.clone();
 	if (paint_point_btn_flag == TRUE)
 	{
@@ -833,17 +847,6 @@ int* Any_Colony_Algorithm(double C[POINT_MAX_NUM][2])
 			globalBestLength = localBestLength;
 		}
 		acs->UpdateGlobalPathRule(*globalTour, globalBestLength);
-		//输出所有蚂蚁循环一次后的迭代最优路径
-	//	cout << "第 " << i + 1 << " 迭代最优路径:" << localBestLength << "." << endl;
-	//	for (int m = 0; m < N; m++)
-	//	{
-	//		cout << localTour[m][0] << ".";
-	//	}
-	//	cout << endl;
-	//}
-	//输出全局最优路径
-	//cout << "全局最优路径长度:" << globalBestLength << endl;
-	//cout << "全局最优路径:";
 		int*res = new int[N];
 		for (int m = 0; m < N; m++)
 		{
@@ -898,6 +901,46 @@ void CallmfcuiDlg::OnBnClickedsurebtn()
 		{
 			circle(frame, point_array[i], 4, Scalar(0, 200, 0), 2);
 		}
+
+		//===记录图片及管理人信息==
+			/*
+			格式： 操作人+操作时间
+			*/
+		CString msg;
+		msg = _T("的本次操作已被记录在后台");
+		AfxMessageBox(current_user_name+msg);
+
+		CTime temp_time;
+		CString current_time_and_name;
+		temp_time = CTime::GetCurrentTime();             //获取当前时间日期
+		CString chinese_expreesion = temp_time.Format("%w");//星期转换为中文的表达方式
+
+		int p = atoi(chinese_expreesion);
+		char* week = 0;
+		switch (p)
+		{
+		case 0:
+			week = "星期日";
+		case 1:
+			week = "星期一";
+		case 2:
+			week = "星期二";
+		case 3:
+			week = "星期三";
+		case 4:
+			week = "星期四";
+		case 5:
+			week = "星期五";
+		case 6:
+			week = "星期六";
+		default:
+			break;
+		}
+		current_time_and_name =  current_user_name+ " " +temp_time.Format(_T("%Y-%m-%d %H-%M-%S")) + " " + CString(week)+".png";
+		cv::String pic_name= LPCTSTR(current_time_and_name);
+		imwrite(pic_name, frame);
+
+		//imwrite(current_time_and_name.GetBuffer(),frame);
 	}
 	m_datadownload.EnableWindow(TRUE);
 	m_sure.EnableWindow(FALSE);
@@ -938,7 +981,7 @@ void CallmfcuiDlg::OnBnClickedsurebtn()
 	int *new_sort=new int[POINT_MAX_NUM];//以最小点为起点重新排序
 	for (int k = 0; k < POINT_MAX_NUM; k++)
 	{
-		new_sort[k] = shortest_sort[min_index + k];//这里不能这么写
+		new_sort[k] = shortest_sort[min_index + k];
 		if ((min_index + k) > (POINT_MAX_NUM - 1))
 		{
 			new_sort[k]= shortest_sort[min_index + k- POINT_MAX_NUM];
@@ -1501,3 +1544,14 @@ void CallmfcuiDlg::OnSize(UINT nType, int cx, int cy)
 	Invalidate(FALSE);
 }
 
+
+
+void CallmfcuiDlg::OnEnChangeOutputstring()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
+}
