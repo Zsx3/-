@@ -1,0 +1,3 @@
+﻿  all_mfc_uiDlg.cpp
+c:\users\dell\desktop\c+opencv+mfc\all_mfc_ui\all_mfc_uidlg.cpp(955): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+  all_mfc_ui.vcxproj -> C:\Users\dell\Desktop\c+opencv+mfc\x64\Debug\all_mfc_ui.exe
